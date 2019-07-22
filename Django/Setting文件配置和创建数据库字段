@@ -1,0 +1,93 @@
+# Django
+
+# 1.Settings文件配置
+
+# 静态文件配置
+import pymysql
+STATIC_URL = '/static/'
+# 静态文件配置
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
+
+# 暴露给外界能够访问服务器静态文件夹下面所有的资源
+
+STATIC_URL = '/xxx/'  # 接口前缀 跟你的静态文件夹的名字一点关系都没有
+# 默认情况下这个前缀跟静态文件夹名字一样！！！
+
+# 静态文件配置
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static/css文件'),  # 就是你的静态文件夹路径
+    os.path.join(BASE_DIR, 'static/js文件'),
+    os.path.join(BASE_DIR, 'static/html文件')
+]
+
+# 2.配置连接MySQL数据库
+# 2.1：第一步：
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'django',  # django项目必须要提前创建好
+        'HOST': '127.0.0.1',
+        'PORT': 3306,
+        'USER': 'root',
+        'PASSWORD': 'root'
+    }
+}
+# 2.1：第二步：
+# 告诉django 用pymysql替换他默认的mysql_db模块
+
+# 方式一： 在你的项目文件夹下面的__init__.py 里面
+# 方式二： 也可以在应用文件夹下面的__init__.py 里面
+
+pymysql.install_as_MySQLdb()  # 告诉django 用pymysql替换他默认的mysql_db模块
+
+
+# 3.Form表单发送地址配置
+# action 属性控制提交的地址
+
+# 方式1：写全路径 ： <form action='Http:/127.0.0.1/login/'>
+
+# 方式2：只写路径后缀 <form action='login/'>
+
+# 方式3：默认不写 就会默认往当前路径提交<form action=''>
+
+
+# 4.form 表单中的请求方式
+get：默认
+
+post：需设置 // post 设置里面也可以配置参数，并且在后台可以获取post参数
+
+修改方式：< form action = '' method = 'post' >
+
+
+# 5.后端提交的数据（POST,GET）如何获取
+# 5.1前端文件
+<input type = "text" placeholder = "Username" name = 'name' >
+<input type = "password" placeholder = "Password" name = 'pwd' >
+<input type = "submit" class = "btn" value = "Sign in" >
+# 5.2后端文件；
+POST和GET里面把数据放在一个大字典里，存放了所有用户的请求数据：
+request.POST/GET
+
+利用get方法获取：当有多个值得时候，只会获取最后一个值
+
+request.GET/POST.get('username')
+
+# 6，利用Django创建数据库表字段：
+# 定义模型表
+# 更多的表字段见这里
+
+在应用里面的Models里面写入
+
+
+class User(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=32)
+    password = models.CharField(max_length=16)
+
+
+# 7.迁移数据库
+python3 manage.py makemigrations
+python3 manage.py migrate
