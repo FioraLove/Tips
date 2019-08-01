@@ -50,3 +50,24 @@
 
     cursor.close()  
     conn.close()
+    
+# 7.sqlite3数据库
+    import sqlite3
+
+    # 连接到SQLite数据库
+    # 数据库文件是test.db
+    # 如果文件不存在，会自动在当前目录创建:
+    conn = sqlite3.connect('test.db')
+    # 创建一个Cursor()对象
+    cursor = conn.cursor()
+    # cursor.execute()执行SQL语句
+    cursor.execute('create table user(id varchar(20) primary key, name varchar(20))')
+    # 数据库中插入数据
+    cursor.execute('insert into user values (1900201,"chd")')
+    # 提交事务:
+    conn.commit()
+    # 通过rowcount获得插入的行数:
+    print(cursor.rowcount)
+    cursor.close()
+    conn.close()
+
