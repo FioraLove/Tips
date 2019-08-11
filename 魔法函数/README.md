@@ -92,3 +92,54 @@
 
         obj = Foo()  # 执行 __init__
         obj()  # 执行 __call__
+        
+### 8.__dict__ 查看类或对象中的所有成员 
+
+        class Province(object):
+            country = 'China'
+
+            def __init__(self, name, count):
+                self.name = name
+                self.count = count
+
+            def func(self, *args, **kwargs):
+                print('func')
+
+
+        # 获取类的成员，即：静态字段、方法、
+        print(Province.__dict__)
+
+        # 输出：{'country': 'China', '__module__': '__main__', 'func': <function func at 0x10be30f50>, '__init__': <function __init__ at 0x10be30ed8>, '__doc__': None}
+
+        obj1 = Province('HeBei', 10000)
+        print(obj1.__dict__)
+
+        # 获取 对象obj1 的成员
+        # 输出：{'count': 10000, 'name': 'HeBei'}
+
+        obj2 = Province('HeNan', 3888)
+        print(obj2.__dict__)
+        # 获取 对象obj1 的成员
+        # 输出：{'count': 3888, 'name': 'HeNan'}
+        
+### 9.__getitem__、__setitem__、__delitem__用于索引操作，如字典。以上分别表示获取、设置、删除数据
+
+    class Foo(object):
+
+        def __getitem__(self, key):
+            print('__getitem__', key)
+
+        def __setitem__(self, key, value):
+            print('__setitem__', key, value)
+
+        def __delitem__(self, key):
+            print('__delitem__', key)
+
+
+    obj = Foo()
+
+    result = obj['k1']  # 自动触发执行 __getitem__
+    obj['k2'] = 'alex'  # 自动触发执行 __setitem__
+    del obj['k1']
+    
+### 10.
