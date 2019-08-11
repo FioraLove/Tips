@@ -1,6 +1,9 @@
 # Django 补述：
 
-   # 1.Django目录
+  # 1.Django目录
+   
+   ##### (当项目较小时，即只有一个APP项目时，将templates，static文件存放与项目，APP同级目录)
+   
             目录结构：
         |--APP
             |   |--views.py
@@ -22,6 +25,42 @@
             |--images
                 |--e.jpeg
                 |--f.jpeg
+        |-- djangoproject
+            |   |-- __init__.py
+            |   |-- settings.py
+            |   |-- urls.py
+            |   |-- wsgi.py 
+        |-- manage.py
+        |-- requirements
+            |   |-- common.txt
+            |   |-- dev.txt
+            |   |-- prod.txt
+            |   |-- test.txt
+        |-- requirements.txt
+        
+   ##### (当项目较大时，即存在多个APP项目时，将templates，static文件存放在APP目录下)：
+   
+        目录结构：
+        |--APP
+            |   |--views.py
+            |   |-- __init__.py
+            |   |-- models.py
+            |   |-- urls.py
+            |   |-- admin.py
+            |   |-- apps.py
+            |   |-- tests.py
+                |--templates
+                    |--a.html
+                |--static
+                    |--css
+                        |--a.css
+                        |--b.css
+                    |--js
+                        |--c.js
+                        |--d.js
+                    |--images
+                        |--e.jpeg
+                        |--f.jpeg
         |-- djangoproject
             |   |-- __init__.py
             |   |-- settings.py
@@ -117,7 +156,7 @@
     
    # 5.settings
    
-   #### 5.1
+   ## 5.1
     STATIC_URL = '/static/'   # 别名（不要改动）
  
     STATICFILES_DIRS = [     # 别名对应的实际路径（STATICFILES_DIRS不能有任何改动）
@@ -125,34 +164,34 @@
     ]
     
     
-   ####5.2
-       TEMPLATES = [
-        {
-            'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [os.path.join(BASE_DIR,'templates')],
-            'APP_DIRS': True,
-            'OPTIONS': {
-                'context_processors': [
-                    'django.template.context_processors.debug',
-                    'django.template.context_processors.request',
-                    'django.contrib.auth.context_processors.auth',
-                    'django.contrib.messages.context_processors.messages',
-                ],
-            },
-        },
-    ]
-   
-   ####5.3
-       INSTALLED_APPS = [
-        'django.contrib.admin',
-        'django.contrib.auth',
-        'django.contrib.contenttypes',
-        'django.contrib.sessions',
-        'django.contrib.messages',
-        'django.contrib.staticfiles',
-        'APP_name'
-    ]
-    
+   ## 5.2
+          TEMPLATES = [
+           {
+               'BACKEND': 'django.template.backends.django.DjangoTemplates',
+               'DIRS': [os.path.join(BASE_DIR,'templates')],
+               'APP_DIRS': True,
+               'OPTIONS': {
+                   'context_processors': [
+                       'django.template.context_processors.debug',
+                       'django.template.context_processors.request',
+                       'django.contrib.auth.context_processors.auth',
+                       'django.contrib.messages.context_processors.messages',
+                   ],
+               },
+           },
+       ]
+
+   ## 5.3
+          INSTALLED_APPS = [
+           'django.contrib.admin',
+           'django.contrib.auth',
+           'django.contrib.contenttypes',
+           'django.contrib.sessions',
+           'django.contrib.messages',
+           'django.contrib.staticfiles',
+           'APP_name'
+       ]
+
     
 ### 路由解耦：
 
