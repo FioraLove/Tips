@@ -14,7 +14,7 @@ from email.mime.multipart import MIMEMultipart
 def send_email_by_qq(to):
     # 发送人的邮件账号以及授权码
     sender_mail = '980710425@qq.com'
-    sender_pass = 'uqtjzlqaoquvbbjb'
+    sender_pass = 'uqtjxxxxxquvbbjb'
 
     # 设置总的邮件体对象，对象类型为mixed
     message = MIMEMultipart('mixed')
