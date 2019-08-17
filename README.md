@@ -26,3 +26,29 @@
     调用方法：settings.configure，configure() 可以设置任何配置项，每个参数对应一个值。参数名称必须大写，而且参数名必须是真实存在
      username = settings.USER_NAME
      password = settings.PASSWORD
+     
+### 二、Redis数据库
+
+    # -*- coding:utf-8 -*-
+    # redis数据库连接
+    from redis import StrictRedis
+
+  -连接方式一：StrictRedis对象
+  
+    redis = StrictRedis(host='localhost', port=6379, db=0, password=None)
+    redis.set('lover', 'woman')
+    print(redis.get('name'))
+    print(redis.get('lover'))
+    print(redis.get('age'))
+
+
+   -连接方式二：
+   
+    from redis import ConnectionPool
+
+    pool = ConnectionPool(host='localhost', port=6379, db=0, password=None)
+    redis = StrictRedis(connection_pool=pool)
+    redis.set('lover', 'woman')
+    print(redis.get('name'))
+    print(redis.get('lover'))
+    print(redis.get('age'))
