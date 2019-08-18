@@ -367,3 +367,43 @@
         # 反向解析
         return HttpResponse(reverse("app02:index"))
     　　2）在页面上访问测试，可以看到引入了命名空间后，URL反解正常。
+          
+### 七、django项目中使用redis存储session
+
+    说明：
+         django默认将session信息存储在数据库中，我们需要通过修改settings.py配置文件，然后将session存储到redis中
+         
+   -1 安装依赖包：
+        pip install django-redis-sessions
+        
+   -2 修改settings.py配置文件
+    
+    # 设置使用redis存储session信息
+    SESSION_ENDINE = 'redis_sessions.session'
+    # redis服务的ip地址
+    SESSION_REDIS_HOST = 'loaclhost'
+    # redis服务的端口
+    SESSION_REDIS_PORT = 6379
+    # redis使用哪个数据库
+    SESSION_REDIS_DB = 2
+    # redis密码
+    SESSION_REDIS_PASSWORD = ''
+    # redis存储信息前缀
+    SESSION_REDIS_PREFIX = 'session'
+    
+   -3 测试，操作session信息   
+    --打开APP_name/views.py文件，创建set_session,get_session的视图
+   
+    from django.http import HttpResponse
+
+    def set_session(request):
+        """设置session"""
+        request.session['name'] = name
+
+        return HttpResponse('设置session')
+
+    def get_session(request):
+        """获取session"""
+        uname = request.session['name']
+
+	    return HttpResponse(ame)
