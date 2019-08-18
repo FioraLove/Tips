@@ -234,9 +234,9 @@
 			 slaveof 127.0.0.1 6379 #格式为slaveof 主机的host 主机的port 
 
 
-          3. slave_6381文件夹中redis.windows.conf文件配置 
+          	 3. slave_6381文件夹中redis.windows.conf文件配置 
 				 # 设置该从机的主机为127.0.0.1:6379
-                 port 6381
+                 			port 6381
 				 slaveof 127.0.0.1 6379
 				 
 		  4. 假设主从机是同一台计算机时，假设Master和Slave在同一台主机（即需调整从机为不同的监听端口），
