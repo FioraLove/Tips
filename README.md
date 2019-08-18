@@ -205,3 +205,52 @@
 
     # 求差集并将差集保存到新的集合dest中
     redis.sdiffstore('new_diff',['tags','tags1'])
+    
+#### 3. redis主从配置
+	
+	资料网站：https://blog.csdn.net/weixin_41846320/article/details/83753667
+		 https://www.cnblogs.com/cang12138/p/9132288.html
+		 https://www.cnblogs.com/carrychan/p/9396997.html
+    redis库下载地址：https://github.com/MicrosoftArchive/redis/releases
+
+   - 3.1安装从库
+   
+    解压文件后，复制一份Redis文件并重命名，当做从库
+	
+	  文件目录：
+	  |----
+	 	---master_6379
+		---slave_6380
+		---slave_6381
+	
+   - 3.2修改从库文件中 redis.windows.conf 的端口号
+   
+   
+   		 1. master_6379 不做更改
+
+		 2.slave_6380文件夹中redis.windows.conf文件配置
+			 port 6380
+			 # 设置该从机的主机为127.0.0.1:6379
+			 slaveof 127.0.0.1 6379 #格式为slaveof 主机的host 主机的port 
+
+
+          3. slave_6381文件夹中redis.windows.conf文件配置 
+				 # 设置该从机的主机为127.0.0.1:6379
+                 port 6381
+				 slaveof 127.0.0.1 6379
+				 
+		  4. 假设主从机是同一台计算机时，假设Master和Slave在同一台主机（即需调整从机为不同的监听端口），
+		  Master的端口为6379，slave1的端口为6380，salve2的端口为6381.....
+		  假设Master和Slave不在同一台主机： redis.windows.conf 文件slavesof的设置是一模一样的，各从机的监听端口设置为6379
+				 
+				 
+- 3.3、安装服务，需要重新设置名称。然后去服务中，开启“redis6380”（此时就可以连接6380的库了）
+
+	  redis-server --service-install redis.windows.conf  --service-name Redis6380
+	  
+- 3.4、知识点：
+  		
+		1.cmd命令进入各redis库目录下，键入命令：redis-cli -p 端口号 启动redis服务
+		2.键入命令 info replication 查看redis数据库相关信息包括：主机，从机属性
+		
+
