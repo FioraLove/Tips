@@ -253,4 +253,49 @@
 		1.cmd命令进入各redis库目录下，键入命令：redis-cli -p 端口号 启动redis服务
 		2.键入命令 info replication 查看redis数据库相关信息包括：主机，从机属性
 		
+#### 4.redis哨兵（sentinel）搭建
 
+		什么是哨兵机制
+			Redis集群中，如果主服务器宕机（扑街）则需要手动去重启或者切换主服务器。通过哨兵机制能实现自动监听，并在从服务器中投票选举出新的master
+
+			Redis的哨兵机制功能如下：
+
+			监控(Monitoring): 哨兵(sentinel) 会不断地检查你的Master和Slave是否运作正常。
+
+			提醒(Notification):当被监控的某个 Redis出现问题时, 哨兵(sentinel) 可以通过 API 向管理员或者其他应用程序发送通知。
+
+			自动故障迁移(Automatic failover):当一个Master不能正常工作时，哨兵(sentinel) 会开始一次自动故障迁移操作,它会将失效Master的其中一个Slave升级为新的Master, 并让失效Master的其他Slave改为复制新的Master; 当客户端试图连接失效的Master时,集群也会向客户端返回新Master的地址,使得集群可以使用Master代替失效Master
+
+
+   -4.1 服务器（Master）配置：在redis安装目录下新建sentinel.conf文件，内容如下：
+   
+	    # 当前Sentinel服务运行的端口
+		port 26379
+		# 哨兵监听的主服务器
+		sentinel monitor mymaster 192.168.1.246 6379 2
+		# 3s内mymaster无响应，则认为mymaster宕机了
+		sentinel down-after-milliseconds mymaster 3000
+		# 如果10秒后,mysater仍没启动过来，则启动failover
+		sentinel failover-timeout mymaster 10000
+		# 执行故障转移时， 最多有1个从服务器同时对新的主服务器进行同步
+		sentinel parallel-syncs mymaster 1
+		# 哨兵监听需要密码认证
+		sentinel auth-pass mymaster test@2017
+		# 线程守护
+		daemonize no
+		# 日志路径
+		logfile "D:/gateway/log/sentinel.log"
+
+
+
+   -4.2 开启哨兵机制：
+   
+   		-遵循先主后备原则：开启主服务，在开启从机服务，最后开启哨兵机制服务
+		Redis bin目录启动哨兵机制：cmd命令进入sentinel.conf即可启动
+		
+   -总结
+   
+	哨兵机制只是某台服务器上的软件，只占用该台服务器的端口
+	一台服务器可以被多个哨兵监听，集群中每个从服务器都可以开启哨兵机制
+	哨兵机制至少需要3台服务器。因为master宕机后，至少要有其他服务器投从服务器一票
+		
