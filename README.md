@@ -27,6 +27,14 @@
      username = settings.USER_NAME
      password = settings.PASSWORD
      
+#### Django模拟登陆时怎么获取cookie以及保存cookie
+	
+	        # 获取cookie
+            cookies_ct = requests.utils.dict_from_cookiejar(session.cookies)
+            # 将cookie保存至本地文件
+            with open(settings.COOKIE_PATH, "w") as fp:
+                json.dump(cookies_ct, fp)
+
 ### 二、Redis数据库
 
     # -*- coding:utf-8 -*-
