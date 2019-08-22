@@ -1,5 +1,24 @@
 # Django 补述：
 
+## 环境搭建
+	- anaconda+pycharm
+	- anaconda使用
+		- conda list: 显示当前环境安装的包
+		- conda env list:显示安装的虚拟环境列表
+		- conda create -n env_name python=3.6
+		- 激活conda的虚拟环境
+			- (Linux)source activate env_name
+			- (win) activate env_name
+		- pip install django=1.8
+
+### 创建第一个django程序
+		- 命令行启动
+        django-admin startproject project_name
+        cd project_name
+		python manage.py startapp app_name
+        
+		运行：python manage.py runserver
+
   # 1.Django目录
    
    ##### (当项目较小时，即只有一个APP项目时，将templates，static文件存放与项目，APP同级目录)
@@ -134,6 +153,12 @@
             2、按照固定的语法（{}）把变量嵌套到html文件中
         """
         return render(request, 'timer.html', {"date":ctime})    # 使用render方法，返回一个页面
+#### ps:当视图HTML文件需要传入多个值时
+#### content={
+#### 	'name':'chd',
+#### 	'age':18
+####  }
+#### return render(request,'live.html',content = content)
    
    # 4.模板（主目录下新建templates文件夹）
    
@@ -149,10 +174,39 @@
     </head>
     <body>
         <h4>当前时间：{{ date }}</h4>
+		<a href="https://www.baidu.com/>
+                <img src="/static/images/logo.png" alt="logo"/>
+            </a>
     </body>
     <!--引入js文件，注意引入位置，不然找不到h4元素-->
     <script src="/static/js/timer.js"></script>
     </html>
+注意：改成自己的图片名称，注意图片和link的前缀：/static/images/ 别写成 static/images/ ，这样会无法显示
+
+
+### 模板与变量、标签：
+	- 变量的表示方法： {{var_name}}
+	- 在系统调用模板的时候，会用相应的数据查找相应的变量名称，如果能找到，则填充，或者叫渲染，否则，跳过
+
+	## 模板-标签
+	- for标签： {% for .. in .. %}
+	- 用法：
+			{% for .. in .. %}
+				循环语句
+			{% endfor %}
+
+	## if标签
+	- 用来判断条件
+	- 代码示例：
+
+			{% if 条件 %}
+				条件成立执行语句
+			{% elif 条件 %}}
+				条件成立执行语句
+			{% else %}
+				以上条件都不成立执行语句
+			{% endif %}}
+			
     
    # 5.settings
    
@@ -179,6 +233,7 @@
                },
            },
        ]
+
 
 ## 5.3设置目标APP
           INSTALLED_APPS = [
@@ -445,3 +500,153 @@
         uname = request.session['name']
 
 	    return HttpResponse(ame)
+
+
+## 七、Model类的使用
+
+###  7.1定义和数据库表映射的类
+
+    - 在应用中的models.py文件中定义class
+    - 所有需要使用ORM的class都必须是 models.Model 的子类
+    - class中的所有属性对应表格中的字段
+    - 字段的类型都必须使用 modles.xxx 不能使用python中的类型
+###	7.2字段常用参数
+
+    1. max_length : 规定数值的最大长度
+    2. blank : 是否允许字段为空,默认不允许
+    3. null : 在DB中控制是否保存为null, 当该字段为空时，Django 会将数据库中该字段设置为 NULL。默认为 False
+    4. default : 默认值
+    5. unique : 唯一
+    6. verbose_name : 假名
+    7. choice : 二元选择数组
+        """
+        一系列二元组，用作此字段的选项。如果提供了二元组，默认表单小部件是一个选择框，而不是标准文本字段，并将限制给出的选项.
+        每个二元组的第一个值会储存在数据库中，而第二个值将只会用于在表单中显示
+        一个选项列表：
+        
+            YEAR_IN_SCHOOL_CHOICES = [
+                ('FR', 'Freshman'),
+                ('SO', 'Sophomore'),
+                ('JR', 'Junior'),
+                ('SR', 'Senior'),
+                ('GR', 'Graduate'),
+            ]
+        """
+
+###  7.3数据库的迁移
+    1. 在命令行中,生成数据迁移的语句(生成sql语句)
+        # 先进入目录主目录（cd my_project）
+
+            python3(python) manage.py makemigrations
+            
+    2. 在命令行中,输入数据迁移的指令
+
+            python3(python) manage.py migrate
+
+            ps : 如果迁移中出现没有变化或者报错,可以尝试强制迁移
+
+            ```
+            # 强制迁移命令
+            python3 manage.py makemigrations 应用名
+            python3 manage.py migrate 应用名
+            ```
+    3. 对于默认数据库，为了避免出现混乱，如果数据库中没有数据，每次迁移前可以把系统自带的sqlite3数据库删除
+    
+    4.常见的一些坑：
+        -解决Django No changes detected 本地无法生成迁移文件：
+            -其中有一种原因是因为你在项目工程Demo的settings.py对新生成的子应用没有进行注册（即INSTALLED_APPS中没有新增新建的APP_name）
+		-外键(ForeignKey)和一对一(OneToOneField)的参数中可以看出,都有on_delete参数,而 django 升级到2.0之后,表与表之间关联的时候,必须要写on_delete参数,否则会报异常
+    
+    
+### 7.4查看数据库中的数据
+
+```
+1. 启动命令行 : python3 manage.py shell
+ps: 注意点: 对orm的操作分为静态函数和非静态函数两种.静态是指在内存中只有一份内容存在,调用的时候使用 类名. 的方式.如果修改了那么所有使用的人都会受影响.
+2. 在命令行中导入对应的映射类
+	from 应用.models import 类名
+3. 使用 objects 属性操作数据库. objects 是 模型中实际和数据库进行交互的 Manager 类的实例化对象.
+4. 查询命令
+	- 类名.objects.all() 查询数据库表中的所有内容. 返回的结果是一个QuerySet类型,实际上是类列表中装这个一个一个数据对象.
+	- 类名.objects.filter(条件) 
+```
+
+```
+# from 应用名.models import 类名
+from myapp.models import Student
+
+# 查询Student表中的所有数据,得到的是一个QuerySet类型
+Student.objects.all()
+
+# 如果要取出所有QuerySet类型中的所有数据对象,需要遍历取出所有的对象,再用对象.属性来查看值
+s = Student.object.all()
+for each in s:
+	print(each.name , each.age , each.address , each.phone)
+
+# 如果要进行过滤筛选,使用filter()方法
+Student.objects.filter(age=18)
+
+当输入Question.objects.all()查看所有对象时无法显示具体的值
+>>> Question.objects.all()
+<QuerySet [<Question: Question object (1)>]>
+等等。<Question: Question object (1)> 对于我们了解这个对象的细节没什么帮助。
+让我们通过编辑 Question 模型的代码（位于 polls/models.py 中）来修复这个问题。给 Question 和 Choice 增加 __str__() 方法。
+
+polls/models.py
+from django.db import models
+
+class Question(models.Model):
+    # ...
+    def __str__(self):
+        return self.question_text
+
+class Choice(models.Model):
+    # ...
+    def __str__(self):
+        return self.choice_text
+给模型增加 __str__() 方法是很重要的，这不仅仅能给你在命令行里使用带来方便，Django 自动生成的 admin 里也使用这个方法来表示对象。
+
+注意：这些都是常规的 Python方法。让我们添加一个自定义的方法，这只是为了演示：
+polls/models.py
+import datetime
+
+from django.db import models
+from django.utils import timezone
+
+
+class Question(models.Model):
+    # ...
+    def was_published_recently(self):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+
+```
+
+
+
+#### 2. 添加数据
+
+```
+对象 = 类()   # 使用类实例化对象
+对象.属性 = 值  # 给对应的对象的属性赋值
+对象.save()  # 必须要执行保存操作,否则数据没有进入数据库
+```
+
+python3 manage.py shell 命令行中添加数据
+
+```
+# from 应用名.models import 类名
+
+from myapp.models import Student
+
+# 实例化对象
+s = Student()
+
+# 给对象的属性赋值
+s.name = '张三'
+s.address = '云南昭通'
+s.phone = '13377886678'
+s.age = 20
+
+# 保存数据
+s.save()
+```
