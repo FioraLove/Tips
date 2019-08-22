@@ -156,15 +156,14 @@
     
    # 5.settings
    
-   ## 5.1
+## 5.1 静态文件（js、css、images...）
     STATIC_URL = '/static/'   # 别名（不要改动）
  
     STATICFILES_DIRS = [     # 别名对应的实际路径（STATICFILES_DIRS不能有任何改动）
         os.path.join(BASE_DIR, "static")  # 对应的是创建的static文件，这个文件名可以变动
     ]
-    
-    
-   ## 5.2
+      
+## 5.2 templates模板设置
           TEMPLATES = [
            {
                'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -181,7 +180,7 @@
            },
        ]
 
-   ## 5.3
+## 5.3设置目标APP
           INSTALLED_APPS = [
            'django.contrib.admin',
            'django.contrib.auth',
@@ -191,8 +190,47 @@
            'django.contrib.staticfiles',
            'APP_name'
        ]
+       
+## 5.4 数据库的配置   
+#### 5.4.1 sqlite3配置
+	   DATABASES = {
+	    'default': {
+		'ENGINE': 'django.db.backends.sqlite3',
+		'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+	    }
+	}
+	
+#### 5.4.1 MySQL配置
+	1. 使用MySQL数据库首先需要安装驱动程序
 
-    
+	pip install PyMySQL
+	
+	2. 在Django的工程同名子目录的init.py文件中添加如下语句
+	import pymysql
+	
+	pymysql.install_as_MySQLdb():作用是让Django的ORM能以mysqldb的方式来调用PyMySQL。 
+	
+	3. 修改DATABASES配置信息
+
+	DATABASES = {
+		'default': {
+			'ENGINE': 'django.db.backends.mysql',
+			'HOST': '127.0.0.1',  # 数据库主机
+			'PORT': 3306,  # 数据库端口
+			'USER': 'root',  # 数据库用户名
+			'PASSWORD': 'mysql',  # 数据库用户密码
+			'NAME': 'django_demo'  # 数据库名字
+		}
+	}
+#### 5.4.1 Oracle配置
+	DATABASES = {
+		'default': {
+		  'ENGINE': 'django.db.backends.oracle',
+		  'NAME': 'IP:端口号/service_name',
+		  'USER': '用户名',
+		  'PASSWORD': '密码',
+		}
+	  }
 ### 路由解耦：
 
 #### 三、应用include函数实现分发
