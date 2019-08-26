@@ -414,6 +414,130 @@
 
    -4、在浏览器登录，输入正确用户名和密码后，执行效果：
    
+### 五、Django2.0版的path
+
+	思考情况如下：
+	urlpatterns = [ 
+		re_path('articles/(?P<year>[0-9]{4})/', year_archive), 
+		re_path('article/(?P<article_id>[a-zA-Z0-9]+)/detail/', detail_view), 
+		re_path('articles/(?P<article_id>[a-zA-Z0-9]+)/edit/', edit_view), 
+		re_path('articles/(?P<article_id>[a-zA-Z0-9]+)/delete/', delete_view), 
+	]
+	
+###### 存在两个问题：
+
+	  第一个问题，函数 year_archive 中year参数是字符串类型的，因此需要先转化为整数类型的变量值，当然year=int(year) 不会有诸如如TypeError或者ValueError的异常。那么有没有一种方法，在url中，使得这一转化步骤可以由Django自动完成？
+
+	  第二个问题，三个路由中article_id都是同样的正则表达式，但是你需要写三遍，当之后article_id规则改变后，需要同时修改三处代码，那么有没有一种方法，只需修改一处即可？
+
+　　在Django2.0中，可以使用 path 解决以上的两个问题。
+
+1、基本示例
+
+	from django.urls import path 
+	from . import views 
+	urlpatterns = [ 
+		path('articles/2003/', views.special_case_2003), 
+		path('articles/<int:year>/', views.year_archive), 
+		path('articles/<int:year>/<int:month>/', views.month_archive), 
+		path('articles/<int:year>/<int:month>/<slug>/', views.article_detail), 
+			] 
+	基本规则：
+
+	1.使用尖括号(<>)从url中捕获值。相当于有名分组，括号内的int是path内置的转换器
+	2.捕获值中可以包含一个转化器类型（converter type），比如使用 <int:name> 捕获一个整数变量。若果没有转化器，将匹配任何字符串，当然也包括了 / 字符。
+	3.无需添加前导斜杠
+	
+	对first_pro进行修改：/first_pro/first_pro/urls.py：
+
+	from django.contrib import admin
+	from django.urls import path,re_path, include
+
+	from app01 import views
+
+	urlpatterns = [
+		path("articles/<int:year>/",views.path_year)   # path_year(request,2010)
+	]
+	
+	对于/first_pro/app01/views.py:
+	from django.shortcuts import render,HttpResponse
+ 
+	# Create your views here.
+	def month_archive(request,y,m):
+		print(m)   # 11
+		print(type(m))   # <class 'str'>
+		print(y)   # 2010
+		print(type(y))   # <class 'str'>
+		return HttpResponse(y+"-"+m)
+
+
+	def path_year(request, year):
+		print(year)             # 2010
+		print(type(year))    # <class 'int'>
+		return HttpResponse("path year")
+	运行效果：
+
+
+###### 以下是根据 2.0官方文档 而整理的示例分析表（了解内容）：　　
+
+	2、path转化器（path converters）
+	  文档原文是Path converters，暂且翻译为转化器。
+
+	Django默认支持以下5个转化器：
+
+		str,匹配除了路径分隔符（/）之外的非空字符串，这是默认的形式
+		int,匹配正整数，包含0
+		slug,匹配字母、数字以及横杠、下划线组成的字符串。（变量常用）
+		uuid,匹配格式化的uuid，如 075194d3-6885-417e-a8a8-6c931e272f00
+		path,匹配任何非空字符串，包含了路径分隔符 （捕获任何字符串，非空即可，但是?不行作用是分隔符）
+		
+	3、注册自定义转化器
+	对于一些复杂或者复用的需要，可以定义自己的转化器。转化器是一个类或接口，它的要求有三点：
+
+		regex类属性，字符串类型
+		to_python(self, value)方法，value是由类属性regex所匹配到的字符串，返回具体的Python变量值，以供Django传递到对应的视图函数中
+		to_url(self, value)方法，和to_python相反，value是一个具体的Python变量值，返回其字符串，通常用于url反向引用
+	
+	应用示例：
+	（1）创建/first_pro/app01/url_convert.py文件
+
+	class MonConvert:
+		# regex 类属性，字符串类型。因此不能随便取其他名字
+		regex = "[0-9]{2}"   # 两位的数字
+
+		# to_python(self, value)方法，value是由类属性regex所匹配到的字符串，返回具体的Python变量值
+		def to_python(self, value):
+			return int(value)
+
+		# to_url(self, value) 方法，value是一个具体的Python变量值，返回其字符串，通常用于url反向引用
+		def to_url(self, value):
+			return '%04d' % value
+	（2）注册定义的url转换器：/first_pro/first_pro/urls.py
+
+	from django.contrib import admin
+	from django.urls import path,re_path, include, register_converter   # 注意register_converter模块引入
+
+	from app01.url_convert import MonConvert   # 引入创建的转换器
+ 
+	# 注册定义的url转换器
+	register_converter(MonConvert, "mm")
+
+	from app01 import views
+
+	urlpatterns = [
+		path("articles/<mm:month>", views.path_month)
+	]
+	（3）自定义转化器/first_pro/app01/urls.py
+
+	from django.shortcuts import render,HttpResponse
+
+	# 自定义转化器
+	def path_month(request, month):
+		print(month, type(month))
+		return HttpResponse("path month....")
+	（4）访问验证
+
+
 ### 六、路由控制——名称空间
 
     　　命名空间（英语：Namespace）是表示标识符的可见范围。一个标识符可在多个命名空间中定义，它在不同命名空间中的含义是互不相干的。这样，在一个新的命名空间中可定义任何标识符，它们不会与任何已有的标识符发生冲突，因为已有的定义都处于其它命名空间中。
@@ -650,3 +774,29 @@ s.age = 20
 # 保存数据
 s.save()
 ```
+## 八、Django的cookie序列化
+
+### 序列化（Serialization）：
+	简单来说就是将对象持久性的保存起来，因为原来的对象是在内存中，程序运行结束后就要释放内存，所有的对象，变量等都会被清除，而序列化则可以将他们保存在文件中。
+	反序列化：读取文件到内存中，转回对象继续使用的过程
+	# 序列化
+	 def save_cookie(self,response):
+		 """
+		 序列化cookies
+		 ;return：
+		 """
+	 	cookie_dict = requests.utils.dict_from_cookiejar(response.cookies)
+		with open(COOKIE_FILE_PATH,'w+',encoding = 'utf-8') as f:
+			json.dump(cookie_dict,f)
+			
+	  # 读取cookies
+	   def read_cookie(self,response):
+		 """
+		 反序列化cookies
+		 ;return：
+		 """
+		with open(COOKIE_FILE_PATH,'r+',encoding = 'utf-8') as f:
+			cookie_dict = json.load(f)
+			cookies = requests.utils.cookiejar_from_dict(cookie_dict)
+			return cookies
+	  
