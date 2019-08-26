@@ -207,6 +207,80 @@
 				以上条件都不成立执行语句
 			{% endif %}}
 			
+	 examples：
+	 （1）遍历每一个元素：
+		{% for i in l %}
+		    <p>{{  i }}</p>
+		{% endfor %}
+		利用{% for obj in list reversed %}反向完成循环
+
+		{% for i in l reversed %}
+		    <p>{{  i }}</p>
+		{% endfor %}
+	（2）遍历一个字典：views.py中有：info = {"name":"yuan","age":22}
+
+		{% for i in info %}
+		    <p>{{ i }}</p>
+		{% endfor %}
+		  页面显示：name:yuan     age:22
+
+	（3）遍历对象数组
+
+		{% for person in person_list %}
+		    <p>{{ person.name }}  {{ person.age }}</p>
+		{% endfor %}
+
+		{# forloop.counter 序号，默认从1开始计数  counter0的序号，从0开始计数 #}
+		{% for person in person_list %}
+		    <p>{{ forloop.counter0 }} {{ person.name }}  {{ person.age }}</p>
+		{% endfor %}
+		
+		  页面显示：alex 333       egon 222
+
+			 0 alex 333       1 egon 222
+			 
+#### csrf_token这个标签用于跨站请求伪造保护。{% csrf_token %}可以渲染出一个input标签。点击提交时，会提交给服务器验证通过校验。　
+
+	（1）代码示例：
+	  urls.py:
+
+	from django.contrib import admin
+	from django.urls import path, re_path
+
+	from app01 import views
+
+	urlpatterns = [
+	    path('admin/', admin.site.urls),
+	    path('index/', views.index),    # 含正则的时候需要使用re_path
+	    path('login/', views.login)
+	]
+　　
+    app01/views.py:
+  
+	from django.shortcuts import render,HttpResponse
+	# Create your views here.
+
+	def login(request):
+	    if request.method == "POST":
+		return HttpResponse("OK")
+	    return render(request, "login.html")
+	    
+    /static/login.html:
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+	    <meta charset="UTF-8">
+	    <title>Title</title>
+	</head>
+	<body>
+	<form action="" method="post">
+	    {% csrf_token %} # 防跨站请求
+	    <input type="text" name="user">
+	    <input type="submit">
+	</form>
+	</body>
+	</html>
+
     
    # 5.settings
    
