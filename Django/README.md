@@ -549,8 +549,23 @@
 		print(year)             # 2010
 		print(type(year))    # <class 'int'>
 		return HttpResponse("path year")
-	运行效果：
+	
+##### url添加带get参数特殊用法：通过查询字符串的方式传递一个参数
 
+	示例代码如下：
+		在子路由urls.py文件中定义URL
+		urlpatterns = [
+			path('admin/', admin.site.urls),
+			path('book/',views.book_list),
+			path('book/detail/',views.book_detail)
+		]
+		
+	在views.py中的代码如下：
+	def book_detail(request):
+		book_id = request.GET.get("id")
+		text = "您输入的书籍id是：%s" % book_id
+		return HttpResponse(text)
+以后在访问的时候就是通过/book/detail/?id=1（注意此刻的?id=n）即可将参数传递过去，输出结果为：您输入的书籍id是：n
 
 ###### 以下是根据 2.0官方文档 而整理的示例分析表（了解内容）：　　
 
