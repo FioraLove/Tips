@@ -59,39 +59,34 @@
         
    ##### (当项目较大时，即存在多个APP项目时，将templates，static文件存放在APP目录下)：
    
-        目录结构：
-        |--APP
-            |   |--views.py
-            |   |-- __init__.py
-            |   |-- models.py
-            |   |-- urls.py
-            |   |-- admin.py
-            |   |-- apps.py
-            |   |-- tests.py
-                |--templates
-                    |--a.html
-                |--static
-                    |--css
-                        |--a.css
-                        |--b.css
-                    |--js
-                        |--c.js
-                        |--d.js
-                    |--images
-                        |--e.jpeg
-                        |--f.jpeg
-        |-- djangoproject
-            |   |-- __init__.py
-            |   |-- settings.py
-            |   |-- urls.py
-            |   |-- wsgi.py 
-        |-- manage.py
-        |-- requirements
-            |   |-- common.txt
-            |   |-- dev.txt
-            |   |-- prod.txt
-            |   |-- test.txt
-        |-- requirements.txt
+         目录结构：        
+        |myproject # 根目录
+            |myproject
+                |static # 公共的静态文件放这里
+                    |myproject
+                        |css
+                        |image
+                        |js
+                |…………(setting、urls等文件)
+        
+            |myapp
+                |static # myapp使用的静态文件放这里
+                    |myapp
+                        |css
+                        |image
+                        |js
+                |…………(views、models等文件)
+        
+            |userapp
+                |static # username使用的静态文件放这里
+                    |userapp
+                        |css
+                        |image
+                        |js
+                |…………(views、models等文件)
+        
+            |db.sqlite3
+            |manage.py
         
    # 2.url编写
     -project目录下的URL设置为：
@@ -284,7 +279,7 @@
     
    # 5.settings
    
-## 5.1 静态文件（js、css、images...）
+## 5.1 静态文件（js、css、images...）（项目简单时的单个APP的静态文件设置）
     STATIC_URL = '/static/'   # 别名（不要改动）
  
     STATICFILES_DIRS = [     # 别名对应的实际路径（STATICFILES_DIRS不能有任何改动）
@@ -319,6 +314,46 @@
            'django.contrib.staticfiles',
            'APP_name'
        ]
+	   
+#### 5.4 多个APP存在时的静态文件设置
+   
+###### 5.4.1.我们的项目有两个 app，分别是 myapp 和 userapp，这样我们的静态文件会分为三部分：
+        1、公共部分（比如全站都会使用的css、jquery、背景图等）
+        2、myapp 使用的静态文件
+        3、userapp 使用的静态文件
+        
+###### 5.4.2.在settings.py文件中
+    在 settings.py 中这样设置：
+    STATIC_URL = '/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    
+    # 我们的静态文件分开三个部分
+    # 这里我们设为三个路径
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'myproject', 'static'),
+        os.path.join(BASE_DIR, 'myapp', 'static'),
+        os.path.join(BASE_DIR, 'userapp', 'static'),
+        ] 
+               
+###### 5.4.3 静态文件调用
+        注意到，每个 app 中的 static 文件夹内都在包含一个和 app 名称一样的文件夹，在该文件夹内在分别放置 css、js、image 等文件夹。
+    这样做的好处是在部署项目时，执行完 python manage.py collectstatic 命令之后,静态文件被收集到 STATIC_ROOT 之后依旧是根据 app 分开的：
+        /static
+            /admin # django 自带后台的静态文件
+            /myapp
+            /myproject
+            /userapp
+    当我们要引入公共部分的静态文件时:
+    {% static 'myproject/css/xxx.css' %}
+    
+    引入 myapp 的静态文件：    
+    {% static "myapp/image/xxx.jpg" %}
+    
+    引入 userapp 的静态文件：    
+    {% static "userapp/image/xxx.jpg" %}
+    
+### 当存在多个APP的情况时，除了static文件的设置外，还应当了解项目中的templates文件设置，参考https://www.cnblogs.com/zh-lin/p/9849057.html
+      
        
 ## 5.4 数据库的配置   
 #### 5.4.1 sqlite3配置
@@ -889,3 +924,16 @@ s.save()
 			cookies = requests.utils.cookiejar_from_dict(cookie_dict)
 			return cookies
 	  
+### 易错易混点
+##### -1 Django的运行指令为python mangage.py runserver 8000 (若想让别人能够访问到你的django项目，则需要修改
+   
+     你的django项目ip地址(最好改为0.0.0.0)，默认的127.0.0.1表示只能自己电脑访问)
+        别人的电脑若想访问你的django项目，则需要如下配置:
+            1.settings.py的ALLOWED_HOSTS = [],可以写上你的运行django项目的那台电脑的IP
+            2.访问URL格式为：https://运行django项目的那台电脑的IP地址+django运行端口号
+
+        
+##### -2 为什么回去url.py文件中寻找映射呢？
+        2.1 是因为在'settings.py'文件中配置了'ROOT_URLCONF'为urls.py,所有的Django都会去在urls.py中寻找
+        2.2 在urls.py中我们所有的映射，都应放在urlpatterns变量中
+        2.3 所有的映射不是任意写的，而是使用path函数和re_path函数封装起来
