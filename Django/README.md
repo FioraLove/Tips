@@ -478,7 +478,8 @@
     
    -2、修改/first_pro/app01/views.py文件，配置login视图函数
 
-    from django.shortcuts import render,HttpResponse
+    from django.shortcuts import render
+	from django.https import HtttpResponse
      
     def login(request):
         print(request.method)  # GET或POST
@@ -750,15 +751,15 @@
 	    return HttpResponse(ame)
 
 
-## 七、Model类的使用
+## 八、Model类的使用
 
-###  7.1定义和数据库表映射的类
+###  8.1定义和数据库表映射的类
 
     - 在应用中的models.py文件中定义class
     - 所有需要使用ORM的class都必须是 models.Model 的子类
     - class中的所有属性对应表格中的字段
     - 字段的类型都必须使用 modles.xxx 不能使用python中的类型
-###	7.2字段常用参数
+###	8.2字段常用参数
 
     1. max_length : 规定数值的最大长度
     2. blank : 是否允许字段为空,默认不允许
@@ -781,7 +782,7 @@
             ]
         """
 
-###  7.3数据库的迁移
+###  8.3数据库的迁移
     1. 在命令行中,生成数据迁移的语句(生成sql语句)
         # 先进入目录主目录（cd my_project）
 
@@ -806,7 +807,7 @@
 		-外键(ForeignKey)和一对一(OneToOneField)的参数中可以看出,都有on_delete参数,而 django 升级到2.0之后,表与表之间关联的时候,必须要写on_delete参数,否则会报异常
     
     
-### 7.4查看数据库中的数据
+### 8.4查看数据库中的数据
 
 ```
 1. 启动命令行 : python3 manage.py shell
@@ -898,7 +899,7 @@ s.age = 20
 # 保存数据
 s.save()
 ```
-## 八、Django的cookie序列化
+## 九、Django的cookie序列化
 
 ### 序列化（Serialization）：
 	简单来说就是将对象持久性的保存起来，因为原来的对象是在内存中，程序运行结束后就要释放内存，所有的对象，变量等都会被清除，而序列化则可以将他们保存在文件中。
@@ -923,6 +924,40 @@ s.save()
 			cookie_dict = json.load(f)
 			cookies = requests.utils.cookiejar_from_dict(cookie_dict)
 			return cookies
+
+## 十、管理员admin
+##### 1. 创建Admin
+	- settings中填入app`
+	- 打开urls.py
+	- 创建超级用户
+	- 配置settings文件
+    
+        步骤：
+        创建一个管理员账号
+        1.首先，我们得创建一个能登录管理页面的用户。请运行下面的命令：
+         python manage.py createsuperuser
+       2.键入你想要使用的用户名，然后按下回车键：
+        
+        Username: admin
+        然后提示你输入想要使用的邮件地址：
+        
+        Email address: admin@example.com
+        最后一步是输入密码。你会被要求输入两次密码，第二次的目的是为了确认第一次输入的确实是你想要的密码。
+        
+        Password: **********
+        Password (again): *********
+        Superuser created successfully.
+
+##### 2. 绑定管理模型:向管理页面中加入应用(即models.py中的class类)
+
+    APP_name/admin.py
+    from django.contrib import admin
+    # Question类
+    from .models import Question
+    
+    admin.site.register(Question)
+
+##### 3. 设置admin管理类
 	  
 ### 易错易混点
 ##### -1 Django的运行指令为python mangage.py runserver 8000 (若想让别人能够访问到你的django项目，则需要修改
@@ -937,3 +972,20 @@ s.save()
         2.1 是因为在'settings.py'文件中配置了'ROOT_URLCONF'为urls.py,所有的Django都会去在urls.py中寻找
         2.2 在urls.py中我们所有的映射，都应放在urlpatterns变量中
         2.3 所有的映射不是任意写的，而是使用path函数和re_path函数封装起来
+		
+##### -3 redirect重定向知识：
+
+###### ★★重定向知识拓展：URL带参数的重定向解决方案,即重定向到带参数的URL而如果url中包含参数，如下类型的url：
+
+            1.重定的目标url：url('^book/(?P<book_id>\d+)/', views.book, name='book')
+            则可以采用如下形式来重定向到带参数的URL
+            return redirect(reverse('book', kwargs={'book_id':120（比如）}))
+
+            2.如果包含多个字段，可以采用如下形式：
+            子urls.py:url('^blog/(?P<blog_id>\d+)/(?P<user_id>\d+)/', views.book, name='blog_id')
+            
+            views.py:return redirect(reverse('book', kwargs={'blog_id': blog_id, 'user_id': user_id}))
+
+###### ★★若想重定向到带查询字符串的URL中(比如：https://127.0.0.1:8000/login/?next=/)：仅有手动拼接这一种方法
+            return redirect(reverse('login')+'?next=/')
+        
