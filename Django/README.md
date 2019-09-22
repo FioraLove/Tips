@@ -60,33 +60,47 @@
    ##### (当项目较大时，即存在多个APP项目时，将templates，static文件存放在APP目录下)：
    
          目录结构：        
-        |myproject # 根目录
-            |myproject
-                |static # 公共的静态文件放这里
-                    |myproject
-                        |css
-                        |image
-                        |js
-                |…………(setting、urls等文件)
-        
-            |myapp
-                |static # myapp使用的静态文件放这里
-                    |myapp
-                        |css
-                        |image
-                        |js
-                |…………(views、models等文件)
-        
-            |userapp
-                |static # username使用的静态文件放这里
-                    |userapp
-                        |css
-                        |image
-                        |js
-                |…………(views、models等文件)
-        
-            |db.sqlite3
-            |manage.py
+	|myproject # 根目录
+		|myproject
+			|static # 公共的静态文件放这里
+				|myproject
+				|css
+				|image
+				|js
+			|…………(settings,主urls等文件)
+
+		|templates(公共模板文件)
+			|a.html
+			|b.html
+
+		|myapp
+			|static # myapp使用的静态文件放这里
+				|myapp
+					|css
+					|image
+					|js
+
+			|templates(myapp专有模板文件) ----这样为了解决多APP情况下的模板调用问题
+				|myapp(app同名文件目录)
+					|a1.html
+					|b1.html		
+			|…………(views、models等文件)
+
+		|userapp
+			|static # username使用的静态文件放这里
+				|userapp
+					|css
+					|image
+					|js
+
+			|templates(userapp专有模板文件) ----这样为了解决多APP情况下的模板调用问题
+				|userapp(app同名文件目录)
+					|a2.html
+					|b2.html	
+			|…………(views、models等文件)
+
+		|db.sqlite3
+		|manage.py
         
    # 2.url编写
     -project目录下的URL设置为：
@@ -286,24 +300,46 @@
         os.path.join(BASE_DIR, "static")  # 对应的是创建的static文件，这个文件名可以变动
     ]
       
-## 5.2 templates模板设置
-          TEMPLATES = [
-           {
-               'BACKEND': 'django.template.backends.django.DjangoTemplates',
-               'DIRS': [os.path.join(BASE_DIR,'templates')],
-               'APP_DIRS': True,
-               'OPTIONS': {
-                   'context_processors': [
-                       'django.template.context_processors.debug',
-                       'django.template.context_processors.request',
-                       'django.contrib.auth.context_processors.auth',
-                       'django.contrib.messages.context_processors.messages',
-                   ],
-               },
-           },
-       ]
+## 5.2
+   
+       TEMPLATES = [
+        {
+            'BACKEND': 'django.template.backends.django.DjangoTemplates',
+            'DIRS': [os.path.join(BASE_DIR,'templates')],  # 优先等级最高，优先寻找templates目录下HTML文件
+            'APP_DIRS': True,  # APP目录下寻找模板HTML文件，一定要开启
+            'OPTIONS': {
+                'context_processors': [
+                    'django.template.context_processors.debug',
+                    'django.template.context_processors.request',
+                    'django.contrib.auth.context_processors.auth',
+                    'django.contrib.messages.context_processors.messages',
+                ],
+            },
+        },
+    ]
+##### 5.2拓：模板查找路径配置
 
+    在项目的settings.py文件中。有一个TEMPLATES配置，
+    这个配置包含了模板引擎的配置，模板查找路径的配置，模板上下文的配置等。模板路径可以在两个地方配置。
 
+    1、DIRS：这是一个列表，在这个列表中可以存放所有的模板路径，以后在视图中使用render或者render_to_string渲染模板的时候，
+         会在这个列表的路径中查找模板。（templates目录与APP，mangage.py，project目录同级，若在templates
+         目录下无法找到模板文件，则会跳转寻找APP_name下的templates目录下的HTML模板文件）
+    2、APP_DIRS：默认为True，这个设置为True后，会在INSTALLED_APPS的安装了的APP下的templates文件加中查找模板。
+    查找顺序：比如代码render('list.html')。先会在DIRS这个列表中依次查找路径下有没有这个模板，如果有，就返回。
+            如果DIRS列表中所有的路径都没有找到，那么会先检查当前这个视图所处的app是否已经安装，
+            如果已经安装了，那么就先在当前这个app下的templates文件夹中查找模板，
+            如果没有找到，那么会在其他已经安装了的app中查找。如果所有路径下都没有找到，那么会抛出一个TemplateDoesNotExist的异常。
+    3、若存在多个APP(APP1_name,APP2_name...)，使用return render(request,'APP1_name(或者APP2_name)/list.html',content={"key":"values"})
+       则可以渲染我们的目标模板
+       ps:
+       #### ps:当视图HTML文件需要传入多个值时
+	 content={
+	 	'name':'chd',
+	 	'age':18
+	  	 }
+	 return render(request,'app_name/live.html',content = content)
+       
 ## 5.3设置目标APP
           INSTALLED_APPS = [
            'django.contrib.admin',
