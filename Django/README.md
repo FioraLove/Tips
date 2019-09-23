@@ -169,8 +169,7 @@
 ####  }
 #### return render(request,'live.html',content = content)
    
-   # 4.模板（主目录下新建templates文件夹）
-   
+   # 4.模板（主目录下新建templates文件夹）   
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -192,8 +191,51 @@
     </html>
 注意：改成自己的图片名称，注意图片和link的前缀：/static/images/ 别写成 static/images/ ，这样会无法显示
 
+#### 4.1 Django模板变量的使用
 
-### 模板与变量、标签：
+ 　　在views.py中进行逻辑控制，编写向跳转页面传递内容的代码。可以看出，对类、字典、列表中的数据均可操作。views.py的内容如下：
+   
+	from django.shortcuts import render
+	from django.http import HttpResponse
+	
+	# 1.对字典型数组的中的数据调用：若想查看xiao wang的age，则{{user_list.0.age}}
+	user_list = [
+		{'name': 'xiao wang', 'age': '18'},
+		{'name': 'hua hua', 'age': '20'}
+	]
+	
+	# 2.对字典的中的数据调用.
+	user_info = {'name': 'hua hua', 'age': '20', 'sex': 'male'}
+	# 3.对类的中的数据调用.
+	class Person(object):
+		def __init__(self, name, age, sex):
+			self.name = name
+			self.age = age
+			self.sex = sex
+
+		def say(self):
+			return 'I am ' + self.name
+	user = Person('Tom', 23, 'male')
+	
+	# 4.对列表中的数据调用.
+	book_list = ['python', 'java', 'php']
+
+	def say(request):
+		return render(request, 'index.html', {'title': 'my page'(简单变量，直接传值), 'user': user, 'book_list': book_list})
+在templates目录下的HTML文件：
+
+	<body>
+	<h1>hello {{ user.name }}</h1>
+	<li>age:{{ user.age }}</li>
+	<li>sex:{{ user.sex }}</li>
+	<div>the {{ user.name }} sya: {{ user.say }}</div>
+	{{ book_list.0 }}
+	</body>
+	
+[Django模板变量的使用](https://www.cnblogs.com/sch01ar/p/11247553.html)
+
+
+### 4.2模板与变量、标签：
 	- 变量的表示方法： {{var_name}}
 	- 在系统调用模板的时候，会用相应的数据查找相应的变量名称，如果能找到，则填充，或者叫渲染，否则，跳过
 
