@@ -307,3 +307,30 @@
 	一台服务器可以被多个哨兵监听，集群中每个从服务器都可以开启哨兵机制
 	哨兵机制至少需要3台服务器。因为master宕机后，至少要有其他服务器投从服务器一票
 		
+#### 5.Python一般脚本文件编写流程：
+	1.文件配置一般在config.json中，比如：用户名，账号，密码，人员信息等等
+	2.在settings.py 文件中导入.json文件中的配置
+	    # 载入配置文件
+	    BASE_DIR = os.path.dirname(os.path.abspath(__file__)) # 返回当前path文件的上一级目录
+	    with open(os.path.join(BASE_DIR,"settings.json"),"r") as f:
+		SETTINGS = json.load(f)
+
+	    #  配置文件的内容获取
+	    SERVER = SETTINGS["DB_CONFIG"]["DB_SERVER"]
+	    # json格式新的调用方法：json.load(f)的变量名["对象名"]["键名"]
+
+	3.在主文件.py 中导入文件import settings
+	    文本格式内容为：settings.SERVER，settings.PASSWORD等等
+
+	脚本目录：
+	    |
+	    |--core.py
+	    |
+	    |--settings.py
+	    |
+	    |--config.json
+	    |
+	    |--a.py
+	    |--b.py
+	    |
+	    |--.gitignore   
