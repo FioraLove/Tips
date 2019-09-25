@@ -331,7 +331,82 @@
 	</form>
 	</body>
 	</html>
+### 4.3模板结构优化(include引入模板或者模板继承)
+   -1.include引入模板笔记：
+   
+    1.有些模板代码是重复地，因此可以单独抽取出来，封装在templates公共目录下，以后哪里有用到，直接使用''include'进来就可以了
+        templates/a.html(a.html调用公共的模板header/footer.html,):
+        
+            # header.html
+            <p>我是header</p>
+            
+            # footer.html
+            <p>我是footer</p>
+            
+            # main.html
+            {% include 'header.html' %}
+            <p>我是main内容</p>
+            {% include 'footer.html' %}
+           
+        include标签寻找路径的方式。也是跟render渲染模板的函数是一样的。
 
+    2.默认include标签包含模版，会自动的使用主模版中的上下文，也即可以自动的使用主模版中的变量。
+      如果想传入一些其他的参数，那么可以使用with语句。示例代码如下：
+        # header.html（比如header.html需要传入参数，主模板使用with传递到子模板中）
+        <p>用户名：{{ username }}</p>
+        
+        # main.html
+        {% include "header.html" with username='huangyong' %}      
+
+   -2.模板继承
+   
+    模版继承类似于Python中的类，在父类中可以先定义好一些变量和方法，然后在子类中实现。
+    模版继承也可以在父模版中先定义好一些子模版需要用到的代码，然后子模版直接继承就可以了。
+    并且因为子模版肯定有自己的不同代码，因此可以在父模版中定义一个block接口，然后子模版再去实现。
+    以下是父模版的代码：
+    
+    {% load static %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <link rel="stylesheet" href="{% static 'style.css' %}" />
+        <title>{% block title %}我的站点{% endblock %}</title>
+    </head>
+    
+    <body>
+        <div id="sidebar">
+            {% block sidebar %}
+            <ul>
+                <li><a href="/">首页</a></li>
+                <li><a href="/blog/">博客</a></li>
+            </ul>
+            {% endblock %}
+        </div>
+        <div id="content">
+            {% block content %}{% endblock %}
+        </div>
+    </body>
+    </html>
+   这个模版，我们取名叫做base.html，定义好一个简单的html骨架，然后定义好两个block接口，让子模版来根据具体需求来实现。子模板然后通过extends标签来实现，示例代码如下：
+
+    {% extends "base.html" %}
+    
+    {% block title %}博客列表{% endblock %}
+    
+    {% block content %}
+        {% for entry in blog_entries %}
+            <h2>{{ entry.title }}</h2>
+            <p>{{ entry.body }}</p>
+        {% endfor %}
+    {% endblock %}
+    
+    ★★需要注意的是：extends标签必须放在模版的第一行。
+    子模板中的代码必须放在block中，否则将不会被渲染。
+    如果在某个block中需要使用父模版的内容，那么可以使用{{block.super}}来继承。比如上例，{%block title%}，如果想要使用父模版的title，那么可以在子模版的title block中使用{{ block.super }}来实现。
+
+    在定义block的时候，除了在block开始的地方定义这个block的名字，还可以在block结束的时候定义名字。
+    比如{% block title %}{% endblock title %}。
+    这在大型模版中显得尤其有用，能让你快速的看到block包含在哪里。
     
    # 5.settings
    
