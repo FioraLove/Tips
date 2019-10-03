@@ -5,7 +5,7 @@
 	显示为：带有超链接的文本内容，隐藏链接的URL
 	
 #### 2.github的markdown写法：
-   &nbsp;&nbsp;-2.1 换行：<br>
+   &nbsp;&nbsp;-2.1 换行：\<br>
    &nbsp;&nbsp;-2.2 空格：\&nbsp;(分号一定要有)
    
 #### 3.vscode 用git 拉取代码，提示：在签出前，请清理存储库工作树
