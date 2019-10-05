@@ -1,5 +1,6 @@
 # Django 补述：
 
+<img src="http://pic1.win4000.com/mobile/2019-08-09/5d4d2f1ba61c7.jpg" width="351px" height="625px"><br>
 ## 环境搭建
 	- anaconda+pycharm
 	- anaconda使用
