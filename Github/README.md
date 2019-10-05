@@ -1,5 +1,6 @@
 ## GitHub常见用法
 
+ <img src="http://pic1.win4000.com/mobile/2019-09-19/5d83307505cc9.jpg" width="60%" height="20%" title="AhriLove"><br>
  
 #### 1.超链接使用：
 	[vue.js 1.x 文档](https://v1-cn.vuejs.org/)：格式[文本内容](链接的URL)
