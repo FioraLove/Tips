@@ -1,5 +1,6 @@
 # Tips
-详细记录一些常见易混知识点，涵盖python，Django，js，SQL，web，spider....
+#### 详细记录一些常见易混知识点，涵盖python，Django，js，SQL，web，spider....<br>
+<img src="其它/images/5a2e2395122c7.jpg" width=60% /><br>
 
 ### 一、存在一个settings.py文件，里面存在任意的参数，比如
 
