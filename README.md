@@ -1,3 +1,18 @@
+
+### ```软硬件的Bug报错```
+<img src="http://pic1.win4000.com/wallpaper/2019-09-29/5d9049c9b3c1d.jpg" width=70%/><br>
+#### 1.[安装Docker后VMware和VirtualBox无法启动 VT-x is not available??](https://blog.csdn.net/huryer/article/details/91126391)<br>
+><span style="color: green"> 要在windows上使用docker-desktop，需要打开Hyper-V；如果要运行VMware 或Oracle VM VirtualBox，需要禁用Hyper-V;鱼和熊掌不可兼得 </span>
+
+#### 2.[解决Windows10中Virtualbox安装虚拟机没有64位选项(N种情形盘点)](https://www.4spaces.org/windows-10-virtualbox-no-64bit/)
+
+#### 3.[]()
+
+
+
+    
+
+
 # Tips
 详细记录一些常见易混知识点，涵盖python，Django，js，SQL，web，spider....
 
