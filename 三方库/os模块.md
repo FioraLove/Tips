@@ -1,4 +1,4 @@
-# os模块常见方法:
+## os模块常见方法:
     os.getcwd() 获取当前工作目录，即当前python脚本工作的目录路径
     os.chdir("dirname")  改变当前脚本工作目录；相当于shell下cd
     os.curdir  返回当前目录: ('.')
@@ -29,12 +29,21 @@
     os.path.getatime(path)  返回path所指向的文件或者目录的最后存取时间
     os.path.getmtime(path)  返回path所指向的文件或者目录的最后修改时间
     
-# 2.BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+## 2.BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     __file__：表示当前文件名称
-    os.path.abspath(__file__)：表示当前文件的绝对路径
+    os.path.abspath(__file__)：表示运行当前文件的完整绝对路径
     os.path.dirname：表示文件的上一级目录
+    eg：目录结构：
+    app|
+       | ---core.py
+       |---settings.json
+       | ---mangage.py
+        运行core.py文件十，调用settings.py文件为:
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) # 获取了app目录的相对目录
+        dir =os.path.join(BASE.DIR,'settings.py') # app目录拼接就为settings.py文件目录：app/settings.py
+        
     
-# 3.python路径拼接os.path.join()函数的用法
+## 3.python路径拼接os.path.join()函数的用法
 
     os.path.join()函数：连接两个或更多的路径名组件
 
