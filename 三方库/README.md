@@ -1,16 +1,20 @@
-## 一、random模块以及随机选择
+## 一、[random模块以及随机选择](https://www.cnblogs.com/dylancao/p/8202888.html)<br>
+
+<img src = "http://pic1.win4000.com/wallpaper/2017-10-24/59eed7973afb7.jpg" width=70%><br>
+
 
       random模块的几种方法：
       1.random() 产生大于0小于1之间的随机的小数
       2.uniform(a,b) 产生a, b范指定围内随机小数
       3.randint(a,b) 产生a，b范围内随机整数,包含a，b
       4.randrange(a,b) 产生a, b范围内的整数，包含开头不包含结尾
-      5.choice(list) 随机返回序列中的一个数据
+      5.choice(list) 随机返回序列中的一个数据,可以从任何序列，比如list列表中，选取一个随机的元素返回，可以用于字符串、列表、元组等
       6.shuffle() 打乱列表顺序
+      7.sample((seq, n) 从序列seq中选择n个随机且独立的元素,比如list列表中，选取一个随机的元素返回，可以用于字符串、列表、元组等
        ———————————————— 
 
 
-### 1.random() 产生大于0小于1之间的随机的小数
+#### 1.random() 产生大于0小于1之间的随机的小数
 
     import random
     ret=random.random()
@@ -28,26 +32,26 @@
 
     2.7213781289518244   
 
-### 3.randint(a,b) 产生a，b范围内随机整数,包含a，b
+#### 3.randint(a,b) 产生a，b范围内随机整数,包含a，b
 
     import random
     ret1=random.randint(1,4)
     print(ret1)   #产生1到4之间随机整数，在1,2,3,4之间随机选取一个整数
 
-### 4.randrange(a,b) 产生a, b范围内的整数，包含开头不包含结尾,可指定步长，步长可有可无
+#### 4.randrange(a,b) 产生a, b范围内的整数，包含开头不包含结尾,可指定步长，步长可有可无
 
     import random
     ret=random.randrange(1,6,2)    步长为2，在1,3,5中随机去一个整数
     print(ret)        # 1 or 3 or 5
 
-### 5.choice(lst) 随机返回序列中的一个数据
+#### 5.choice(lst) 随机返回序列中的一个数据
 
     import random
     lst=['a','b','c']
     ret=random.choice(lst)     随机选取lst中的一个元素
     print(ret)    # a or b  or c
 
-### 6.shuffle() 打乱列表顺序
+#### 6.shuffle() 打乱列表顺序
 
     import random
     lst=['a','b','c']
@@ -58,4 +62,10 @@
 
     ['c', 'b', 'a']
     ———————————————— 
+#### 7.random.sample(seq,n)序列seq中选择n个随机且独立的元素
+      info =['a', 'b', 'c', 'd', 'e']
+      random.sample(info,2)
+      
+      运行结果：
+      ['d', 'e']
 
