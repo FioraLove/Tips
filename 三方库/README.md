@@ -1,6 +1,6 @@
 ## 一、[random模块以及随机选择](https://www.cnblogs.com/dylancao/p/8202888.html)<br>
 
-<img src = "http://pic1.win4000.com/wallpaper/2017-10-24/59eed7973afb7.jpg" width=70%><br>
+<img src = "https://github.com/FioraLove/Tips/blob/Dev-1/%E5%85%B6%E5%AE%83/images/5927f2c7269aa.jpg?raw=true" width=70%><br>
 
 
       random模块的几种方法：
@@ -68,4 +68,13 @@
       
       运行结果：
       ['d', 'e']
+
+### [二、string模块](https://github.com/FioraLove/Tips/blob/Dev-1/%E4%B8%89%E6%96%B9%E5%BA%93/string%E6%A8%A1%E5%9D%97.py)
+
+    a = string.ascii_letters  # 表示获取包含大小写的所有英文字母
+    b = string.ascii_lowercase  # 获取所有的小写字母
+    c = string.ascii_uppercase  # 获取所有的大写英文字母
+    d = string.digits  # 获取所有的数字
+        
+       
 
