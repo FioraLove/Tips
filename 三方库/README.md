@@ -1,4 +1,4 @@
-## 一、[random模块以及随机选择](https://www.cnblogs.com/dylancao/p/8202888.html)<br>
+## 一、[random模块以及随机选择](https://www.cnblogs.com/dylancao/p/8202888.html) <br>
 
 <img src = "https://github.com/FioraLove/Tips/blob/Dev-1/%E5%85%B6%E5%AE%83/images/5927f2c7269aa.jpg?raw=true" width=70%><br>
 
@@ -75,6 +75,30 @@
     b = string.ascii_lowercase  # 获取所有的小写字母
     c = string.ascii_uppercase  # 获取所有的大写英文字母
     d = string.digits  # 获取所有的数字
-        
+    
+### [三、os模块](https://github.com/FioraLove/Tips/blob/Dev-1/%E4%B8%89%E6%96%B9%E5%BA%93/os%E6%A8%A1%E5%9D%97.md)
+    os.path.dirname()
+    os.path.abspath(__file__)
+    os.path.join(path1,path2,...path)
+    os.systeam('程序名')：启动py程序
        
 
+### [调用其它文件的类和函数](https://www.cnblogs.com/xiugeng/p/8681520.html)   &nbsp;&nbsp;&nbsp;[源文件出处](https://github.com/FioraLove/Tips/blob/Dev-1/%E4%B8%89%E6%96%B9%E5%BA%93/%E8%B0%83%E7%94%A8%E5%85%B6%E5%AE%83%E6%96%87%E4%BB%B6%E7%9A%84%E7%B1%BB%E5%92%8C%E5%87%BD%E6%95%B0.py)
+    同一文件下调用其它文件的
+    不同文件下调用类和函数:由于Python import模块时，是在sys.path里按顺序查找的。需要先将要使用文件的文件路径加入sys.path中。
+
+    import sys
+    sys.path.appent(r'/home/admin/PythonProject/CourseSelesct/')
+    import Student
+
+    s = Student.Student('egon', 18, 'male')
+    s.learn()
+    
+### [四、sys模块](https://www.cnblogs.com/xiugeng/p/8716223.html)
+    sys.version：python解释器的版本信息
+    sys.path：查找模块所在目录的目录名列表（模块搜索路径，初始化时使用pythonPATH环境变量的值）
+    sys.platform：输出一个字符串，是解释器正在其上运行的“平台”名称。一般是操作系统名称，如果是Jpython则是JAVA虚拟机
+    sys.getrecursionlimit()  # 获取最大递归层数  默认是1000（0-999）
+    sys.setrecursionlimit(1200)  # 设置最大递归层数
+    sys.getdefaultencoding()   # 获取解释器默认编码
+    sys.getfilesystemencoding()   # 获取内存数据存到文件里的默认编码
