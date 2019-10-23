@@ -102,3 +102,7 @@
     sys.setrecursionlimit(1200)  # 设置最大递归层数
     sys.getdefaultencoding()   # 获取解释器默认编码
     sys.getfilesystemencoding()   # 获取内存数据存到文件里的默认编码
+### [time&datetime模块](https://github.com/FioraLove/Tips/blob/Dev-1/%E4%B8%89%E6%96%B9%E5%BA%93/time%E4%B8%8Edatetime%E6%A8%A1%E5%9D%97.md)
+    time.time():时间戳
+    time.strftime('%Y-%m-%d %H:%M:%S')  ：'2019-10-23 09:03:45'
+    time.sleep()   # 线程推迟指定的时间运行，单位为秒
