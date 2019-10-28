@@ -6,7 +6,7 @@
 	[vue.js 1.x 文档](https://v1-cn.vuejs.org/)：格式[文本内容](链接的URL)
 	显示为：带有超链接的文本内容，隐藏链接的URL
 	
-#### 2.github的markdown写法：[MakeDown写法一](https://blog.csdn.net/BlueAmerTJ/article/details/51556308) &nbsp;&nbsp; [Makedown写法二](https://www.jianshu.com/p/40ba812dd973)
+#### 2.github的markdown写法：[MakeDown写法一](https://blog.csdn.net/BlueAmerTJ/article/details/51556308) &nbsp;&nbsp; [Makedown写法二](https://www.jianshu.com/p/40ba812dd973) &nbsp;&nbsp;&nbsp;[makedown写法三](https://www.jianshu.com/p/191d1e21f7ed)
    &nbsp;&nbsp;-2.1 换行：\<br> <br>
    &nbsp;&nbsp;-2.2 空格：\&nbsp;(分号一定要有)
    
