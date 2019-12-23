@@ -9,7 +9,7 @@
 #### 3.[Nginx相关介绍](https://www.cnblogs.com/wcwnina/p/8728391.html)
 
 #### 4.[ChromeDriver与Chrome版本对应参照表](https://blog.csdn.net/BinGISer/article/details/88559532) &nbsp;&nbsp;[ChromeDriver下载链接](http://chromedriver.storage.googleapis.com/index.html) &nbsp;&nbsp;[chromedriver安装教程](https://blog.csdn.net/qq_40604853/article/details/81388078)
-
+#### 5.[解决Chrome调试(debugger)总是进入paused in debugger状态](https://blog.csdn.net/jasmine0178/article/details/89636155)
     
 
 
