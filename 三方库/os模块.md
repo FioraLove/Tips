@@ -29,7 +29,7 @@
     os.path.getatime(path)  返回path所指向的文件或者目录的最后存取时间
     os.path.getmtime(path)  返回path所指向的文件或者目录的最后修改时间
     
-## 2.BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+## 2.BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(\_ \_file\_ \_)))
     __file__：表示当前文件名称
     os.path.abspath(__file__)：表示运行当前文件的完整绝对路径
     os.path.dirname：表示文件的上一级目录
