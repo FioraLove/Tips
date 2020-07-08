@@ -65,11 +65,10 @@
 	|myproject # 根目录
 		|myproject
 			|static # 公共的静态文件放这里
-				|myproject
 				|css
 				|image
 				|js
-			|…………(settings,主urls等文件)
+			|settings,主urls等文件
 
 		|templates(公共模板文件)
 			|a.html
