@@ -411,17 +411,13 @@
     这在大型模版中显得尤其有用，能让你快速的看到block包含在哪里。
     
    # 5.settings
-   
-## 5.1 静态文件（js、css、images...）（项目简单时的单个APP的静态文件设置）
-    STATIC_URL = '/static/'   # 别名（不要改动）
- 
-    STATICFILES_DIRS = [     # 别名对应的实际路径（STATICFILES_DIRS不能有任何改动）
-        os.path.join(BASE_DIR, "static")  # 对应的是创建的static文件，这个文件名可以变动
-    ]
-      
-## 5.2
-   
-       TEMPLATES = [
+
+## 5.1 静态文件基本设置
+
+无论是单APP还是多APP，这一步都必不可少
+
+```
+TEMPLATES = [
         {
             'BACKEND': 'django.template.backends.django.DjangoTemplates',
             'DIRS': [os.path.join(BASE_DIR,'templates')],  # 优先等级最高，优先寻找templates目录下HTML文件
@@ -436,7 +432,19 @@
             },
         },
     ]
-##### 5.2拓：模板查找路径配置
+```   
+
+## 5.1 静态文件（js、css、images...）（项目简单时的单个APP的静态文件设置）
+    STATIC_URL = '/static/'   # 别名（不要改动）
+ 
+    STATICFILES_DIRS = [     # 别名对应的实际路径（STATICFILES_DIRS不能有任何改动）
+        os.path.join(BASE_DIR, "static")  # 对应的是创建的static文件，这个文件名可以变动
+    ]
+      
+## 5.2
+   
+       
+**模板查找路径配置说明**
 
     在项目的settings.py文件中。有一个TEMPLATES配置，
     这个配置包含了模板引擎的配置，模板查找路径的配置，模板上下文的配置等。模板路径可以在两个地方配置。
@@ -473,31 +481,47 @@
 #### 5.4 多个APP存在时的静态文件设置
    
 ###### 5.4.1.我们的项目有两个 app，分别是 myapp 和 userapp，这样我们的静态文件会分为三部分：
+
         1、公共部分（比如全站都会使用的css、jquery、背景图等）
         2、myapp 使用的静态文件
         3、userapp 使用的静态文件
         
 ###### 5.4.2.在settings.py文件中
-    在 settings.py 中这样设置：
+
+    在 settings.py 中这样设置（三者必不可少）：
     STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
     
     # 我们的静态文件分开三个部分
     # 这里我们设为三个路径
     STATICFILES_DIRS = [
+        # myproject为主项目的公共静态文件
         os.path.join(BASE_DIR, 'myproject', 'static'),
+        # myapp下的专属静态文件
         os.path.join(BASE_DIR, 'myapp', 'static'),
         os.path.join(BASE_DIR, 'userapp', 'static'),
-        ] 
+    ] 
                
-###### 5.4.3 静态文件调用
-        注意到，每个 app 中的 static 文件夹内都在包含一个和 app 名称一样的文件夹，在该文件夹内在分别放置 css、js、image 等文件夹。
-    这样做的好处是在部署项目时，执行完 python manage.py collectstatic 命令之后,静态文件被收集到 STATIC_ROOT 之后依旧是根据 app 分开的：
+###### 5.4.3 静态文件加载
+
+注意到，每个 app 中的 static 文件夹内都在包含一个和 app 名称一样的文件夹，在该文件夹内在分别放置各自 css、js、image 等文件夹。
+这样做的好处是在部署项目时，执行完 **python manage.py collectstatic** 命令之后,静态文件被收集到 STATIC_ROOT 之后依旧是根据 app 分开的：
+
+执行collectstatic命令后，最终把静态文件统一集中在主目录下的static文件夹下
+
+```
         /static
             /admin # django 自带后台的静态文件
-            /myapp
-            /myproject
-            /userapp
+            /myapp  # myapp的特有的静态文件
+            /myproject  # myproject共有的静态文件
+            /userapp # userapp的特有的静态文件
+```
+
+在DTL中，使用static标签来加载静态文件。要使用static标签，首先需要{% load static %}，举例如下：
+
+    {% load static %}
+     <link rel="stylesheet" href="{% static 'style.css' %}">
+
     当我们要引入公共部分的静态文件时:
     {% static 'myproject/css/xxx.css' %}
     
