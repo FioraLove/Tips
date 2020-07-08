@@ -22,6 +22,8 @@
 		运行：python manage.py runserver
 
   # 1.Django目录
+  
+  ![](https://cdn.jsdelivr.net/gh/FioraLove/Images/20200708172854.png)
    
    ##### (当项目较小时，即只有一个APP项目时，将templates，static文件存放与项目，APP同级目录)
    
